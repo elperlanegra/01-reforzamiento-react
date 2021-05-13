@@ -14,8 +14,9 @@ export const TiposBasicos = () => {
       <h3>Tipos Básicos</h3>
       { name }, { edad }, { (estaActivo) ? 'activo' : 'no activo' }
       <br/>
+      
     </>
 
   );
-  
+
 };
