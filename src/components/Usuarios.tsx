@@ -1,20 +1,40 @@
 import { useEffect, useState } from "react";
 import { reqResApi } from "../api/reqRes";
-import { ReqResListado, Usuario } from '../interfaces/reqRes';
+import { ReqResListado, Usuario } from "../interfaces/reqRes";
 
 export const Usuarios = () => {
-
-
-    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
   useEffect(() => {
     // Lla mando al API
-    reqResApi.get<ReqResListado>("/users")
+    reqResApi
+      .get<ReqResListado>("/users")
       .then((resp) => {
-        console.log(resp.data.data);
+        setUsuarios(resp.data.data);
       })
       .catch(console.log);
   }, []);
+
+  const renderItem = (usuario: Usuario) => {
+    return (
+      <tr key={usuario.id.toString()}>
+        <td>
+          <img
+            src={usuario.avatar}
+            alt={usuario.first_name}
+            style={{
+              width: 55,
+              borderRadius: 100,
+            }}
+          />
+        </td>
+        <td>
+          {usuario.first_name} {usuario.last_name}
+        </td>
+        <td>{usuario.email}</td>
+      </tr>
+    );
+  };
 
   return (
     <div>
@@ -28,8 +48,10 @@ export const Usuarios = () => {
             <th>Email</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>{usuarios.map(renderItem)}</tbody>
       </table>
+
+      <button className="btn btn-primary">Siguiente</button>
     </div>
   );
 };

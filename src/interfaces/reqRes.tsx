@@ -4,7 +4,7 @@ export interface ReqResListado {
     per_page:    number;
     total:       number;
     total_pages: number;
-    data:        Usuario;
+    data:        Usuario[];
     support:     Support;
 }
 
