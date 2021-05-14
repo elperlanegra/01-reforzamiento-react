@@ -68,6 +68,11 @@ export const Login = () => {
       },
     });
   };
+  const logout = () => {
+    dispatch({
+      type: "logout",
+    });
+  };
 
   if (validando) {
     return (
@@ -89,7 +94,7 @@ export const Login = () => {
       }
 
       {token ? (
-        <button className="btn btn-danger">logout</button>
+        <button className="btn btn-danger" onClick={ logout }>logout</button>
       ) : (
         <button className="btn btn-primary" onClick={ login }>Login</button>
       )}
