@@ -1,3 +1,4 @@
+import { type } from "os";
 import { useReducer, useEffect } from "react";
 
 interface AuthState {
@@ -14,7 +15,12 @@ const initialState: AuthState = {
   nombre: "",
 };
 
-type AuthAction = { type: "logout" };
+type LoginPayload = {
+  userName: string;
+  nombre: string;
+};
+
+type AuthAction = { type: "logout" } | { type: "login"; payload: LoginPayload };
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
@@ -26,19 +32,42 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         userName: "",
       };
 
+    case "login":
+      const { nombre, userName } = action.payload;
+      return {
+        validando: false,
+        token: "abc123",
+        userName,
+        nombre,
+      };
+
     default:
-     return state;
+      return state;
   }
 };
 
 export const Login = () => {
-  const [{ validando }, dispatch] = useReducer(authReducer, initialState);
+  const [{ validando, token, nombre }, dispatch] = useReducer(
+    authReducer,
+    initialState
+  );
 
   useEffect(() => {
     setTimeout(() => {
       dispatch({ type: "logout" });
     }, 1500);
   }, []);
+
+  const login = () => {
+    dispatch({
+      type: "login",
+
+      payload: {
+        nombre: "Manuel",
+        userName: "thanos",
+      },
+    });
+  };
 
   if (validando) {
     return (
@@ -52,12 +81,18 @@ export const Login = () => {
   return (
     <>
       <h3>Login</h3>
-      <div className="alert alert-info">Validando.....</div>
-      <div className="alert alert-success">No auntenticado</div>
-      <div className="alert alert-danger">Auntenticado</div>
-      <button className="btn btn-info">Login</button>
-      &nbsp;
-      <button className="btn btn-danger">Logout</button>
+
+      { token ? 
+        <div className="alert alert-success">Auntenticado como: {nombre}</div>
+       : 
+        <div className="alert alert-danger">No Auntenticado</div>
+      }
+
+      {token ? (
+        <button className="btn btn-danger">logout</button>
+      ) : (
+        <button className="btn btn-primary" onClick={ login }>Login</button>
+      )}
     </>
   );
 };
